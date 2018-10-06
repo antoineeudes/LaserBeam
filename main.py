@@ -1,6 +1,12 @@
 from ray import *
 
 G = Grid(26, 26)
+
+####################################################
+### Pour creer un miroir '/' à la position 'A-A', utiliser set_mirror('A', 'A')
+### Pour creer un miroir '\' à la position 'A-A', utiliser set_backmirror('A', 'A')
+####################################################
+
 G.set_backmirror('A', 'C')
 G.set_mirror('C', 'C')
 G.set_mirror('C', 'B')
@@ -23,11 +29,10 @@ G.set_mirror('T', 'W')
 G.set_backmirror('R', 'W')
 G.set_mirror('R', 'S')
 G.set_backmirror('Y', 'S')
+
 print(G)
 c0, c1 = simulate_ray(G, 'A', '>')
 print('\n')
-
-
 print(G)
 
 print("point de sortie : " + c0 + "-" + c1)
