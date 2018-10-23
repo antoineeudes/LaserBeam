@@ -6,10 +6,12 @@ This part will explain you how to install PyQt5 and PyQt5-sip installed on your 
 
 Run
 
-```sudo pip install virtualenv
+```
+sudo pip install virtualenv
 cd path/to/this/directory
 virtualenv -p python3 venv
-source venv/bin/activate```
+source venv/bin/activate
+```
 
 ## Installation
 
