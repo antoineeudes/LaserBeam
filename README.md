@@ -13,4 +13,6 @@ pip3 install -r requirements.txt
 ```
 # Launch the program
 Check that your virtual environment is activated (run `source venv/bin/activate` if it is not the case)
-`python3 main.py`
+```
+python3 main.py
+```
