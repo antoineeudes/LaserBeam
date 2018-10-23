@@ -1,6 +1,6 @@
 # /src/box.py
 import string
-from obstacles import BackSlashMirror, Transporter, ForwardSlashMirror, SquareMirror, VerticalMirror, HorizontalMirror, Aether, Particle
+from .obstacles import BackSlashMirror, Transporter, ForwardSlashMirror, SquareMirror, VerticalMirror, HorizontalMirror, Aether, Particle
 
 int_letter_couples = list(zip(range(0, len(string.ascii_uppercase)),
                               string.ascii_uppercase))

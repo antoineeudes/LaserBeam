@@ -1,8 +1,8 @@
 # /src/tests.py
 import unittest
 import random
-from box import Box
-from obstacles import Transporter, ForwardSlashMirror, BackSlashMirror, Aether
+from .box import Box
+from .obstacles import Transporter, ForwardSlashMirror, BackSlashMirror, Aether
 
 class BoxTest(unittest.TestCase):
 
