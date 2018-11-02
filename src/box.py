@@ -123,22 +123,6 @@ class Box:
 
     def find_exits(self, description):
         return sorted(self.find_exits_recursive(self._particle_of_string(description), dict()))
-    # def find_exits_recursive(self, particle, seen):
-    #     exits = []
-    #     while self._is_particle_in_box(particle):
-    #         x, y, dx, dy = particle.x, particle.y, particle.dx, particle.dy
-    #         if isinstance(self[x, y], Transporter):
-    #             for transporter in self[x, y]._outputs:
-    #                 particle.x, particle.y = transporter[0], transporter[1]
-    #                 if not (transporter.__str__(), dx, dy) in seen: # permet de ne pas rester piege dans un cycle
-    #                     seen[transporter.__str__(), dx, dy] = True
-    #                     exits += self.find_exits_recursive(Aether().step(particle), seen)
-    #             return exits
-    #         particle = self[x, y].step(particle)
-    #     exits.append(self._string_of_particle(particle))
-    #     exits = list(set(exits)) # permet d'enlever les sorties comptées plusieurs fois
-    #     exits.sort()
-    #     return exits
 
     def find_exits_recursive(self, particle, seen):
         exits = set([])
@@ -154,11 +138,6 @@ class Box:
             particle = self[x, y].step(particle)
         exits.add(self._string_of_particle(particle))
         return exits
-
-
-
-
-
 
 def build_interactively():
     def input_dimension(text):
@@ -218,6 +197,16 @@ def generate_random_box(width, height):
         other_holes = holes[:idx] + holes[idx+1:]
         transporters.append((x, y, Transporter(other_holes)))
     return Box(width, height, mirrors + transporters)
+
+def random_entry_point(number_of_cols, number_of_lines):
+    kinds_of_directions = ['<', '>', '^', 'v']
+    direction = random.choice(kinds_of_directions)
+    if direction == '<' or direction == '>':
+        limit = number_of_lines
+    elif direction == '^' or direction == 'v':
+        limit = number_of_lines
+    letter = int_to_letter[random.randint(0, limit-1)]
+    return direction + letter
 
 
 if __name__ == "__main__":

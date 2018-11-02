@@ -1,6 +1,6 @@
 # Prerequisites
 This part will explain you how to install PyQt5 and PyQt5-sip installed on your computer.
-## If you use a virtual environment
+## If you want to use a virtual environment
 ```
 sudo pip install virtualenv
 cd path/to/this/directory
