@@ -1,6 +1,6 @@
 # /src/main.py
-from .box import build_interactively
-from .obstacles import *
+from box import build_interactively
+from obstacles import *
 
 
 if __name__ == '__main__':

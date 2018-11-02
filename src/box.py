@@ -1,6 +1,7 @@
 # /src/box.py
 import string
 from .obstacles import BackSlashMirror, Transporter, ForwardSlashMirror, SquareMirror, VerticalMirror, HorizontalMirror, Aether, Particle
+import random
 
 int_letter_couples = list(zip(range(0, len(string.ascii_uppercase)),
                               string.ascii_uppercase))
@@ -119,13 +120,28 @@ class Box:
         """
         exit_desc, trace = self.simulate_with_trace(description)
         return exit_desc
-    ############################################################################
-    ### Code ajoute a la version du professeur
-    ############################################################################
+
     def find_exits(self, description):
-        return self.find_exits_recursive(self._particle_of_string(description), dict())
+        return sorted(self.find_exits_recursive(self._particle_of_string(description), dict()))
+    # def find_exits_recursive(self, particle, seen):
+    #     exits = []
+    #     while self._is_particle_in_box(particle):
+    #         x, y, dx, dy = particle.x, particle.y, particle.dx, particle.dy
+    #         if isinstance(self[x, y], Transporter):
+    #             for transporter in self[x, y]._outputs:
+    #                 particle.x, particle.y = transporter[0], transporter[1]
+    #                 if not (transporter.__str__(), dx, dy) in seen: # permet de ne pas rester piege dans un cycle
+    #                     seen[transporter.__str__(), dx, dy] = True
+    #                     exits += self.find_exits_recursive(Aether().step(particle), seen)
+    #             return exits
+    #         particle = self[x, y].step(particle)
+    #     exits.append(self._string_of_particle(particle))
+    #     exits = list(set(exits)) # permet d'enlever les sorties comptées plusieurs fois
+    #     exits.sort()
+    #     return exits
+
     def find_exits_recursive(self, particle, seen):
-        exits = []
+        exits = set([])
         while self._is_particle_in_box(particle):
             x, y, dx, dy = particle.x, particle.y, particle.dx, particle.dy
             if isinstance(self[x, y], Transporter):
@@ -133,13 +149,14 @@ class Box:
                     particle.x, particle.y = transporter[0], transporter[1]
                     if not (transporter.__str__(), dx, dy) in seen: # permet de ne pas rester piege dans un cycle
                         seen[transporter.__str__(), dx, dy] = True
-                        exits += self.find_exits_recursive(Aether().step(particle), seen)
+                        exits = exits|self.find_exits_recursive(Aether().step(particle), seen)
                 return exits
             particle = self[x, y].step(particle)
-        exits.append(self._string_of_particle(particle))
-        exits = list(set(exits)) # permet d'enlever les sorties comptées plusieurs fois
-        exits.sort()
+        exits.add(self._string_of_particle(particle))
         return exits
+
+
+
 
 
 
@@ -175,7 +192,31 @@ def build_interactively():
     for idx, (x, y) in enumerate(holes):
         other_holes = holes[:idx] + holes[idx+1:]
         transporters.append((x, y, Transporter(other_holes)))
-        print(other_holes)
+    return Box(width, height, mirrors + transporters)
+
+def generate_random_box(width, height):
+    mirrors = []
+    holes = []
+    number_elements = random.randint(0, width*height)
+    kinds_of_elements = ['o', '/', '\\', '#', '|', '-']
+    for i in range(number_elements):
+        kind = random.choice(kinds_of_elements)
+        xposition = random.randint(0, width-1)
+        yposition = random.randint(0, height-1)
+        if kind == 'o':
+            holes.append((xposition, yposition))
+        else:
+            if kind == '/': mirror_obj = ForwardSlashMirror()
+            elif kind == '\\': mirror_obj = BackSlashMirror()
+            elif kind == '-': mirror_obj = HorizontalMirror()
+            elif kind == '|': mirror_obj = VerticalMirror()
+            elif kind == '#': mirror_obj = SquareMirror()
+            else: assert False, "invalid element kind"
+            mirrors.append((xposition, yposition, mirror_obj))
+    transporters = []
+    for idx, (x, y) in enumerate(holes):
+        other_holes = holes[:idx] + holes[idx+1:]
+        transporters.append((x, y, Transporter(other_holes)))
     return Box(width, height, mirrors + transporters)
 
 
