@@ -26,30 +26,30 @@ class Button(QPushButton):
 
 class UpButton(Button):
 
-    def __init__(self, x, y, win):
-        Button.__init__(self, x, y, win, '^')
-        win.grid.addWidget(self, x+1, y+3)
+    def __init__(self, idcol, win):
+        Button.__init__(self, 0, idcol, win, '^')
+        win.grid.addWidget(self, self._x+1, self._y+3)
         self.value = '^' + int_to_letter[self._y]
 
 class DownButton(Button):
 
-    def __init__(self, x, y, win):
-        Button.__init__(self, x, y, win, 'v')
-        win.grid.addWidget(self, x+3, y+3)
+    def __init__(self, idcol, win):
+        Button.__init__(self, win.box.height, idcol, win, 'v')
+        win.grid.addWidget(self, self._x+3, self._y+3)
         self.value = 'v' + int_to_letter[self._y]
 
 class LeftButton(Button):
 
-    def __init__(self, x, y, win):
-        Button.__init__(self, x, y, win, '<')
-        win.grid.addWidget(self, x+3, y+1)
+    def __init__(self, idline, win):
+        Button.__init__(self, idline, 0, win, '<')
+        win.grid.addWidget(self, self._x+3, self._y+1)
         self.value = '<' + int_to_letter[self._x]
 
 class RightButton(Button):
 
-    def __init__(self, x, y, win):
-        Button.__init__(self, x, y, win, '>')
-        win.grid.addWidget(self, x+3, y+3)
+    def __init__(self, idline, win):
+        Button.__init__(self, idline, win.box.width, win, '>')
+        win.grid.addWidget(self, self._x+3, self._y+3)
         self.value = '>' + int_to_letter[self._x]
 
 class TextArea(QLabel):
@@ -95,13 +95,13 @@ class Window(QWidget):
             UpTextArea(j, self)
             DownTextArea(j, self)
 
-    def addButtons(self, height, width):
-        for i in range(0, height):
-            LeftButton(i, 0, self)
-            RightButton(i, width, self)
-        for j in range(0, width):
-            UpButton(0, j, self)
-            DownButton(height, j, self)
+    def addButtons(self):
+        for i in range(0, self.box.height):
+            LeftButton(i, self)
+            RightButton(i, self)
+        for j in range(0, self.box.width):
+            UpButton(j, self)
+            DownButton(j, self)
 
     def addImage(self, i, j):
         pic = QLabel(self)
@@ -136,7 +136,7 @@ class Window(QWidget):
         self.grid = QGridLayout()
         self.displayBox()
         self.addInterrogationPoints(self.box.height, self.box.width)
-        self.addButtons(self.box.height, self.box.width)
+        self.addButtons()
         self.solutions = self.box.find_exits(self.entry_point)
 
     def display(self):
