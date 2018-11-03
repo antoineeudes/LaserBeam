@@ -205,6 +205,8 @@ def random_entry_point(number_of_cols, number_of_lines):
         limit = number_of_lines
     elif direction == '^' or direction == 'v':
         limit = number_of_lines
+    else:
+        raise ValueError('incorrect direction')
     letter = int_to_letter[random.randint(0, limit-1)]
     return direction + letter
 

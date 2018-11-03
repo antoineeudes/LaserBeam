@@ -57,24 +57,47 @@ class RightButton(Button):
 
 class TextArea(QLabel):
 
-    def __init__(self, x, y, text, win):
+    def __init__(self, x, y, win):
         self._win = win
         QLabel.__init__(self)
-        self.setText(text)
+        self.setText('?')
         self.setAlignment(Qt.AlignCenter)
         win.grid.addWidget(self, x, y)
-        win.text_areas[x, y] = self
+
+class UpTextArea(TextArea):
+
+    def __init__(self, idline, win):
+        TextArea.__init__(self, 0, idline+3, win)
+        win.text_areas['v'+int_to_letter[idline]] = self
+
+class DownTextArea(TextArea):
+
+    def __init__(self, idline, win):
+        TextArea.__init__(self, win.box.height+4, idline+3, win)
+        win.text_areas['^'+int_to_letter[idline]] = self
+
+class LeftTextArea(TextArea):
+
+    def __init__(self, idcol, win):
+        TextArea.__init__(self, idcol+3, 0, win)
+        win.text_areas['>'+int_to_letter[idcol]] = self
+
+class RightTextArea(TextArea):
+
+    def __init__(self, idcol, win):
+        TextArea.__init__(self, idcol+3, win.box.width+4, win)
+        win.text_areas['<'+int_to_letter[idcol]] = self
 
 
 class Window(QWidget):
 
     def addInterrogationPoints(self, height, width):
         for i in range(0, height):
-            TextArea(i+3, 0, '?', self)
-            TextArea(i+3, width+4, '?', self)
+            LeftTextArea(i, self)
+            RightTextArea(i, self)
         for j in range(0, width):
-            TextArea(0, j+3, '?', self)
-            TextArea(height+4, j+3, '?', self)
+            UpTextArea(j, self)
+            DownTextArea(j, self)
 
     def addButtons(self, height, width):
         for i in range(0, height):
@@ -84,7 +107,7 @@ class Window(QWidget):
             UpButton(0, j, self)
             DownButton(height, j, self)
 
-    def addObstacle(self, i, j):
+    def addImage(self, i, j):
         pic = QLabel(self)
         if isinstance(self.box[j, i], ForwardSlashMirror):
             pic.setPixmap(QPixmap(os.getcwd() + "/gui/images/forward_slash_mirror.png"))
@@ -103,19 +126,21 @@ class Window(QWidget):
         self.grid.addWidget(pic, i+3, j+3)
         self.obstacles_label[i,j] = pic
 
-    def displayObstacles(self):
+    def displayBox(self):
         for i in range(0, self.box.height):
             for j in range(0, self.box.width):
-                self.addObstacle(i, j)
+                self.addImage(i, j)
 
     def __init__(self, number_of_cols, number_of_lines):
         self.entry_point = random_entry_point(number_of_cols, number_of_lines)
+        # print(self.entry_point)
         self.text_areas = dict()
         self.obstacles_label = dict()
         self.box = generate_random_box(number_of_cols, number_of_lines)
+        # print(self.box)
         QWidget.__init__(self)
         self.grid = QGridLayout()
-        self.displayObstacles()
+        self.displayBox()
         self.addInterrogationPoints(self.box.height, self.box.width)
         self.addButtons(self.box.height, self.box.width)
         self.solutions = self.box.find_exits(self.entry_point)
@@ -131,16 +156,4 @@ class Window(QWidget):
         for key, textarea in self.text_areas.items():
             textarea.setText(' ')
         direction, letter = self.entry_point
-        x = letter_to_int[letter]+3
-        y = x
-        if direction == '>':
-            y = 0
-        elif direction == '<':
-            y = self.box.width+4
-        elif direction == 'v':
-            x = 0
-        elif direction == '^':
-            x = self.box.height+4
-        else:
-            raise ValueError("incorrect direction")
-        self.text_areas[x, y].setText(direction)
+        self.text_areas[self.entry_point].setText(direction)
