@@ -24,14 +24,12 @@ class Button(QPushButton):
         self.value = None
         self.clicked.connect(self.on_click)
 
-
 class UpButton(Button):
 
     def __init__(self, x, y, win):
         Button.__init__(self, x, y, win, '^')
         win.grid.addWidget(self, x+1, y+3)
         self.value = '^' + int_to_letter[self._y]
-
 
 class DownButton(Button):
 
@@ -53,7 +51,6 @@ class RightButton(Button):
         Button.__init__(self, x, y, win, '>')
         win.grid.addWidget(self, x+3, y+3)
         self.value = '>' + int_to_letter[self._x]
-
 
 class TextArea(QLabel):
 
@@ -87,7 +84,6 @@ class RightTextArea(TextArea):
     def __init__(self, idcol, win):
         TextArea.__init__(self, idcol+3, win.box.width+4, win)
         win.text_areas['<'+int_to_letter[idcol]] = self
-
 
 class Window(QWidget):
 
