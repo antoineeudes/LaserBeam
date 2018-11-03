@@ -129,11 +129,9 @@ class Window(QWidget):
 
     def __init__(self, number_of_cols, number_of_lines):
         self.entry_point = random_entry_point(number_of_cols, number_of_lines)
-        # print(self.entry_point)
         self.text_areas = dict()
         self.obstacles_label = dict()
         self.box = generate_random_box(number_of_cols, number_of_lines)
-        # print(self.box)
         QWidget.__init__(self)
         self.grid = QGridLayout()
         self.displayBox()
@@ -148,7 +146,7 @@ class Window(QWidget):
 
     def clear(self):
         for key, label in self.obstacles_label.items():
-                label.setPixmap(QPixmap(os.getcwd() + "/gui/images/aether.png"))
+            label.setPixmap(QPixmap(os.getcwd() + "/gui/images/aether.png"))
         for key, textarea in self.text_areas.items():
             textarea.setText(' ')
         direction, letter = self.entry_point
